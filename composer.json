@@ -1,0 +1,24 @@
+{
+    "name": "wlfio/slimfast",
+    "description": "quick slim based app start",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WolfGang",
+            "email": "slimfast@wlf.io"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "php-di/php-di": "^6.0",
+        "slim/slim": "^4.3",
+        "slim/psr7": "^0.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WlfIO\\SlimFast\\": "src"
+        }
+    }
+}
