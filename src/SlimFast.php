@@ -108,8 +108,11 @@ class SlimFast
         }
     }
 
-    protected function setupMiddleware()
+    protected function setupMiddleware($middleware = [])
     {
+        foreach ($middleware as $item){
+            $this->app->add($item);
+        }
         $this->app->addErrorMiddleware(true, true, true);
     }
 
