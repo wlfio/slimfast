@@ -53,7 +53,7 @@ class Router
         require $filePath . "";
     }
 
-    public function addRoute($method, string $pattern, array $callback, $data)
+    public function addRoute($method, string $pattern, array $callback, $data = null)
     {
         $this->routes[] = [
             "slim" => [
