@@ -59,7 +59,7 @@ class SlimFast
     }
 
     protected function populateRoutes($path = null){
-        $path = $path ?? APP_ROOT . "src/routes";
+        $path = $path ?? APP_ROOT . "/src/routes";
         Router::Instance($path)->populateRoutes($this->app);
     }
 
@@ -98,5 +98,9 @@ class SlimFast
         defined(self::APP_ROOT) or define(self::APP_ROOT, realpath($params[self::APP_ROOT] ?? __DIR__ . "/../../../../"));
         defined(self::APP_NAME) or define(self::APP_NAME, $params[self::APP_NAME] ?? "SlimFastApp");
         defined(self::DEBUG_ENABLED) or define(self::DEBUG_ENABLED, ($params[self::DEBUG_ENABLED] ?? false) === true);
+    }
+
+    public function run(){
+        $this->app->run();
     }
 }
