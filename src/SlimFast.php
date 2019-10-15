@@ -53,6 +53,8 @@ class SlimFast
     {
         $builder = new ContainerBuilder();
 
+        $builder->useAutowiring(true);
+
         $builder->addDefinitions(
             $this->getContainerDefinitions()
         );
@@ -60,12 +62,13 @@ class SlimFast
         $this->container = $builder->build();
     }
 
-    protected function getContainerDefinitions(){
+    protected function getContainerDefinitions()
+    {
         $definitions = [];
 
-        $twigPath = APP_ROOT . "/srv/Views";
-        if(file_exists($twigPath)){
-            $definitions[Twig::class] = function(Container $c) use ($twigPath) {
+        $twigPath = APP_ROOT . "/src/Views";
+        if (file_exists($twigPath)) {
+            $definitions[Twig::class] = function (Container $c) use ($twigPath) {
                 $view = new Twig(
                     [$twigPath],
                     [
@@ -74,7 +77,7 @@ class SlimFast
                     ]
                 );
 
-                $view->offsetSet("app_name", $this->getAppName());
+                $view->offsetSet("app_name", APP_NAME);
                 $view->offsetSet("year", date("Y"));
 
                 return $view;
@@ -85,7 +88,7 @@ class SlimFast
 
     protected function populateRoutes($path = null)
     {
-        $path = $path ?? APP_ROOT . "/src/routes";
+        $path = $path ?? APP_ROOT . "/src/Routes";
         Router::Instance($path)->populateRoutes($this->app);
     }
 
@@ -107,7 +110,7 @@ class SlimFast
 
     protected function setupMiddleware()
     {
-
+        $this->app->addErrorMiddleware(true, true, true);
     }
 
     private function createSlim()
