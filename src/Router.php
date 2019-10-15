@@ -14,7 +14,6 @@ class Router
 
     public static function Instance(string $path): Router
     {
-        $path = realpath($path);
         if (empty(self::$instances)) {
             $class = get_called_class();
             self::$instances[$path] = new $class($path);
@@ -30,19 +29,27 @@ class Router
     private function gatherRoutes(string $path)
     {
         $path = realpath($path);
+        if (!is_string($path)) {
+            return;
+        }
         if (file_exists($path)) {
             foreach (new \DirectoryIterator($path) as $file) {
-                if($file->isDot())continue;
-                if($file->isFile() && $file->getExtension() == "php"){
+                if ($file->isDot()) {
+                    continue;
+                }
+                if ($file->isFile() && $file->getExtension() == "php") {
                     $this->loadRouteFile($file->getRealPath());
-                } else if($file->isDir()){
-                    $this->gatherRoutes($file->getRealPath());
+                } else {
+                    if ($file->isDir()) {
+                        $this->gatherRoutes($file->getRealPath());
+                    }
                 }
             }
         }
     }
 
-    private function loadRouteFile(string $filePath){
+    private function loadRouteFile(string $filePath)
+    {
         require $filePath . "";
     }
 
@@ -64,7 +71,7 @@ class Router
         $app->map(
             ["GET"],
             "/ping",
-            function(Request $request, Response $response, $args){
+            function (Request $request, Response $response, $args) {
                 $response->getBody()->write("pong");
                 return $response;
             }

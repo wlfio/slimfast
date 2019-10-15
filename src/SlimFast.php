@@ -21,7 +21,7 @@ class SlimFast
     private $app;
     private $container = null;
 
-    public static function Instance() : SlimFast
+    public static function Instance(): SlimFast
     {
         if (empty(self::$instance)) {
             $class = get_called_class();
@@ -48,7 +48,8 @@ class SlimFast
         $this->populateRoutes();
     }
 
-    protected function setupContainer(){
+    protected function setupContainer()
+    {
         $builder = new ContainerBuilder();
 
         $this->container["settings"]["debug"] = DEBUG_ENABLED;
@@ -58,18 +59,21 @@ class SlimFast
         $this->container = $builder->build();
     }
 
-    protected function populateRoutes($path = null){
+    protected function populateRoutes($path = null)
+    {
         $path = $path ?? APP_ROOT . "/src/routes";
         Router::Instance($path)->populateRoutes($this->app);
     }
 
-    protected function getContainerAliases(){
+    protected function getContainerAliases()
+    {
         return [];
     }
 
-    private function populateContainerAliases(ContainerBuilder $builder){
-        foreach($this->getContainerAliases() as $alias => $class){
-            if($alias !== $class){
+    private function populateContainerAliases(ContainerBuilder $builder)
+    {
+        foreach ($this->getContainerAliases() as $alias => $class) {
+            if ($alias !== $class) {
                 $builder->addDefinitions()[$alias] = function (Container $c) use ($class) {
                     return $c->get($class);
                 };
@@ -77,7 +81,8 @@ class SlimFast
         }
     }
 
-    protected function setupMiddleware(){
+    protected function setupMiddleware()
+    {
 
     }
 
@@ -87,20 +92,24 @@ class SlimFast
         $this->app = AppFactory::create();
     }
 
-    final public function getContainer() {
+    final public function getContainer()
+    {
         return $this->container;
     }
-    
+
     public static function Defines(array $params = [])
     {
         defined(self::APP_START) or define(self::APP_START, $params[self::APP_START] ?? microtime(true));
-        defined(self::SLIMFAST_ROOT) or define(self::SLIMFAST_ROOT, realpath($params[self::SLIMFAST_ROOT] ?? __DIR__ . "/../"));
-        defined(self::APP_ROOT) or define(self::APP_ROOT, realpath($params[self::APP_ROOT] ?? __DIR__ . "/../../../../"));
+        defined(self::SLIMFAST_ROOT) or define(self::SLIMFAST_ROOT,
+            realpath($params[self::SLIMFAST_ROOT] ?? __DIR__ . "/../"));
+        defined(self::APP_ROOT) or define(self::APP_ROOT,
+            realpath($params[self::APP_ROOT] ?? __DIR__ . "/../../../../"));
         defined(self::APP_NAME) or define(self::APP_NAME, $params[self::APP_NAME] ?? "SlimFastApp");
         defined(self::DEBUG_ENABLED) or define(self::DEBUG_ENABLED, ($params[self::DEBUG_ENABLED] ?? false) === true);
     }
 
-    public function run(){
+    public function run()
+    {
         $this->app->run();
     }
 }
