@@ -68,15 +68,6 @@ class Router
 
     public function populateRoutes(SlimApp $app)
     {
-        $app->map(
-            ["GET"],
-            "/ping",
-            function (Request $request, Response $response, $args) {
-                $response->getBody()->write("pong");
-                return $response;
-            }
-        );
-
         foreach ($this->routes as $route) {
             $app->map(...$route["slim"]);
         }

@@ -6,6 +6,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
 
 class SlimFast
 {
@@ -52,11 +53,34 @@ class SlimFast
     {
         $builder = new ContainerBuilder();
 
-        $this->container["settings"]["debug"] = DEBUG_ENABLED;
-
-        $this->populateContainerAliases($builder);
+        $builder->addDefinitions(
+            $this->getContainerDefinitions()
+        );
 
         $this->container = $builder->build();
+    }
+
+    protected function getContainerDefinitions(){
+        $definitions = [];
+
+        $twigPath = APP_ROOT . "/srv/Views";
+        if(file_exists($twigPath)){
+            $definitions[Twig::class] = function(Container $c) use ($twigPath) {
+                $view = new Twig(
+                    [$twigPath],
+                    [
+                        "cache" => false,
+                        "debug" => true,
+                    ]
+                );
+
+                $view->offsetSet("app_name", $this->getAppName());
+                $view->offsetSet("year", date("Y"));
+
+                return $view;
+            };
+        }
+        return $definitions;
     }
 
     protected function populateRoutes($path = null)
